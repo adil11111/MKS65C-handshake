@@ -8,7 +8,6 @@ static void sighandler(int signo) {
     exit(0);
   }
 }
-
 /*=========================
   server_handshake
   args: int * to_client
@@ -24,15 +23,14 @@ int server_handshake(int *to_client) {
   while (1) {
     fd = open("wkp", O_RDONLY);
     signal(SIGINT, sighandler);
-
     char * receiving = malloc(BUFFER_SIZE);
     read(fd, receiving, BUFFER_SIZE);
     printf("Client Says: %s", receiving);
 
     close(fd);
-    signal(SIGINT, sighandler);
     
     fd = open("wkp", O_WRONLY);
+    signal(SIGINT, sighandler);
     char sending[BUFFER_SIZE];
     strcpy(sending,"!.!");
     strcat(sending,receiving);
@@ -57,7 +55,6 @@ int client_handshake(int *to_server) {
   int fd;
   while (1) {
     fd = open("wkp", O_WRONLY);
-    signal(SIGINT, sighandler);
     
     char sending[BUFFER_SIZE];
     fgets(sending, BUFFER_SIZE, stdin);
@@ -66,7 +63,6 @@ int client_handshake(int *to_server) {
     close(fd);
 
     fd = open("wkp", O_RDONLY);
-    signal(SIGINT, sighandler);
   
     char * receiving = malloc(BUFFER_SIZE);
     read(fd, receiving, BUFFER_SIZE);
